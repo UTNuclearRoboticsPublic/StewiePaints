@@ -6,6 +6,7 @@ project(StewiePaints)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  move_interface
 )
 
 find_package(OpenCV REQUIRED)
@@ -115,6 +116,7 @@ catkin_package(
 # include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
+  include
 )
 
 ## Declare a C++ library
