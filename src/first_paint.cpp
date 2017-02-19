@@ -1,21 +1,10 @@
 // nothing here yet!
 
-// C++ low-level includes
-#include <list>
-#include <string>
-
-// ROS includes
-#include <ros/ros.h>
-#include <move_interface.h>
-
-// Internal includes
-#include <StewiePaints/process_img.h>
-
-MoveInterface* move;
+#include <stewie_paints/process_img.h>
 
 void clean_brush() {
   //move over water
-  //dip in water
+  //dip in water   (use first_paint::dipDepth)
   //swish
   //move back
 }
@@ -26,6 +15,8 @@ void pointilism(std::string img_path) {
   //now go through all points
   for(std::list<ColorPoint>::iterator it = dots.begin(); it != dots.end(); ++it) {
     // paint a dot
+
+    // select the nearest color
     if(it->r > 250 && it->g > 250 && it->b > 250) {
       ROS_INFO("dot: white");
       continue; //skip white dots
@@ -42,10 +33,12 @@ void pointilism(std::string img_path) {
     }
 
     //move over color
-    //dip into color
+
+    //dip into color   (use first_paint::dipDepth)
     //lift
     //move to dot
     //move down
+    //perform the specified stroke (xy vectors)
     //move up
 
     //clean off the brust
