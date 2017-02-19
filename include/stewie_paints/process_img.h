@@ -16,23 +16,15 @@
 using namespace cv;
 using namespace std;
 
-namespace first_paint {
-	double dipDepth = 0.005;
-	double canvasZ = 0;
-	MoveInterface* move;
-}
-
-using namespace first_paint;
-
-struct ColorPoint {
+struct color_point {
 	int x, y;
 	int r, g, b;
 };
 
 // Used to name and locate the paints and the water
-class paintOrWater {
+class paint_or_water {
 	public:
-		geometry_msgs::PoseStamped paintPose; // The pose when the brush is just above the paint
+		geometry_msgs::PoseStamped paint_pose; // The pose when the brush is just above the paint
 };
 
 // Define a stroke of the brush
@@ -40,68 +32,16 @@ class stroke{
 	public:
 		string name; // May have several named stroke types
 		int x, y; // Starting position for the stroke
-		vector< geometry_msgs::Vector3 > strokeVectors; // Small x,y,z vectors to define the stroke
+		vector< geometry_msgs::Vector3 > stroke_vectors; // Small x,y,z vectors to define the stroke
 };
-
-// Define the names and locations of paints and water
-int definePaintsAndWater()
-{
-	paintOrWater water;
-	water.paintPose.pose.position.x = 0.;
-	water.paintPose.pose.position.y = 0.;
-	water.paintPose.pose.position.z = 0.;
-	water.paintPose.pose.orientation.x = 0.;
-	water.paintPose.pose.orientation.y = 0.;
-	water.paintPose.pose.orientation.z = 0.;
-	water.paintPose.pose.orientation.w = 1.;
-	water.paintPose.header.stamp = ros::Time::now();
-	water.paintPose.header.frame_id = "base_link";
-
-	paintOrWater black;
-	black.paintPose.pose.position.x = 0.;
-	black.paintPose.pose.position.y = 0.;
-	black.paintPose.pose.position.z = 0.;
-	black.paintPose.pose.orientation.x = 0.;
-	black.paintPose.pose.orientation.y = 0.;
-	black.paintPose.pose.orientation.z = 0.;
-	black.paintPose.pose.orientation.w = 1.;
-	black.paintPose.header.stamp = ros::Time::now();
-	black.paintPose.header.frame_id = "base_link";
-
-	paintOrWater red;
-	red.paintPose.pose.position.x = 0.;
-	red.paintPose.pose.position.y = 0.;
-	red.paintPose.pose.position.z = 0.;
-	red.paintPose.pose.orientation.x = 0.;
-	red.paintPose.pose.orientation.y = 0.;
-	red.paintPose.pose.orientation.z = 0.;
-	red.paintPose.pose.orientation.w = 1.;
-	red.paintPose.header.stamp = ros::Time::now();
-	red.paintPose.header.frame_id = "base_link";
-
-	return 0;
-}
-
-// The different types of strokes
-int defineStrokes()
-{
-	stroke flatStripe;
-	geometry_msgs::Vector3 vec1;
-	vec1.x = 0.005;
-	vec1.y = 0;
-	vec1.z = 0;
-	flatStripe.strokeVectors.push_back( vec1 );
-
-	return 0;
-}
 
 /*
  * imgPath: absolute path to image
  * horizRes: width of the color point grid
  * vertRes: height of the color point grid
  */
-std::list<ColorPoint> getImageAsPoints(std::string img_path, int horiz_res, int vert_res) {
-	std::list<ColorPoint> list = std::list<ColorPoint>();
+std::list<color_point> get_image_as_points(std::string img_path, int horiz_res, int vert_res) {
+	std::list<color_point> list = std::list<color_point>();
 
 	Mat image;
 	image = imread(img_path, CV_LOAD_IMAGE_COLOR);
@@ -120,7 +60,7 @@ std::list<ColorPoint> getImageAsPoints(std::string img_path, int horiz_res, int 
 
 	for(int i=0; i < horiz_res; ++i) {
 		for(int j=0; j < vert_res; ++j) {
-			ColorPoint cp;
+			color_point cp;
 			// TODO: test RGB/BGR image
 			int x = i * x_step;
 			int y = j * y_step;

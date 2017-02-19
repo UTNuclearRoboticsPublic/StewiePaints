@@ -1,19 +1,27 @@
 // nothing here yet!
 
 #include <stewie_paints/process_img.h>
+#include <stewie_paints/define_paints_strokes.h>
+
+// Execute the vectors in the specified stroke
+void perform_stroke(stroke)
+{
+
+}
 
 void clean_brush() {
   //move over water
-  //dip in water   (use first_paint::dipDepth)
-  //swish
-  //move back
+  //dip in water   (use stewie_paints::dip_depth)
+  //swish	(use a 'rinse' stroke)
+  perform_stroke(rinse);
+  //lift up
 }
 
 void pointilism(std::string img_path) {
   // first, get the image as a series of point/color combos
-  std::list<ColorPoint> dots = getImageAsPoints(img_path, 10, 10);
+  std::list<color_point> dots = get_image_as_points(img_path, 10, 10);
   //now go through all points
-  for(std::list<ColorPoint>::iterator it = dots.begin(); it != dots.end(); ++it) {
+  for(std::list<color_point>::iterator it = dots.begin(); it != dots.end(); ++it) {
     // paint a dot
 
     // select the nearest color
@@ -34,12 +42,12 @@ void pointilism(std::string img_path) {
 
     //move over color
 
-    //dip into color   (use first_paint::dipDepth)
-    //lift
+    //dip into color  	(use stewie_paints::dip_depth)
+    //lift		(use stewie_paints::dip_depth)
     //move to dot
-    //move down
-    //perform the specified stroke (xy vectors)
-    //move up
+    //move down		(use stewie_paints::dip_depth)
+    //perform_stroke(flat_stripe);
+    //move up		(use stewie_paints::dip_depth)
 
     //clean off the brust
     clean_brush();
@@ -59,6 +67,9 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "first_paint");
   ros::NodeHandle nh("first_paint");
   ROS_WARN("First paint start!");
+
+  define_strokes();
+  define_paints_and_water();
 
   // move = new MoveInterface();
   // move->initialize("sia5");
