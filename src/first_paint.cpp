@@ -3,10 +3,16 @@
 #include <stewie_paints/process_img.h>
 #include <stewie_paints/define_paints_strokes.h>
 
+MoveInterface robot;
+
+using namespace stewie_paints;
+
 // Execute the vectors in the specified stroke
 void perform_stroke(stroke)
 {
+  for(std::vector<stroke>::iterator it; it.hasNext(); ++it) {
 
+  }
 }
 
 void clean_brush() {
@@ -21,6 +27,9 @@ void pointilism(std::string img_path) {
   // first, get the image as a series of point/color combos
   std::list<color_point> dots = get_image_as_points(img_path, 10, 10);
   //now go through all points
+
+  geometry_msgs::PoseStamped lastpose = black, thispose = water;
+
   for(std::list<color_point>::iterator it = dots.begin(); it != dots.end(); ++it) {
     // paint a dot
 
@@ -30,23 +39,26 @@ void pointilism(std::string img_path) {
       continue; //skip white dots
     } else if(it->r < 5 && it->g < 5 && it->b < 5) {
       ROS_INFO("dot: black");
-      //set color position
+      thispose = black;
     } else if(it->r > 250 && it->g < 5 && it->b < 5) {
       ROS_INFO("dot: red");
-      //set color position
+      thispose = red;
     }
     else {
       ROS_INFO("dot: uncaught");
       continue;
     }
 
-    //move over color
+    if (thispose != lastpose) {
+      clean_brush();
+    }
+    robot.moveArm(black, 1.0, true);
 
     //dip into color  	(use stewie_paints::dip_depth)
     //lift		(use stewie_paints::dip_depth)
     //move to dot
     //move down		(use stewie_paints::dip_depth)
-    //perform_stroke(flat_stripe);
+    perform_stroke(stewie_paints::flat_stripe);
     //move up		(use stewie_paints::dip_depth)
 
     //clean off the brust
@@ -63,6 +75,10 @@ int main(int argc, char** argv)
   } else {
     std::cout << "going to paint based on image " << argv[1] << std::endl;
   }
+  robot = MoveInterface();
+  robot.initialize("ur3_stewie");
+  robot.setPlannerId("RRTConnectkConfigDefault");
+  robot.setPlanningTime(10.0);
 
   ros::init(argc, argv, "first_paint");
   ros::NodeHandle nh("first_paint");
@@ -70,12 +86,6 @@ int main(int argc, char** argv)
 
   define_strokes();
   define_paints_and_water();
-
-  // move = new MoveInterface();
-  // move->initialize("sia5");
-  // move->setPlannerId("RRTConnectkConfigDefault");
-  // move->setPlanningTime(1.0);
-  // move->setVelocityScaling(1);
 
   pointilism(std::string(argv[1]));
 
